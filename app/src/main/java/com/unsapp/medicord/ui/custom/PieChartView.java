@@ -103,7 +103,7 @@ public class PieChartView extends View {
         do {
             temp[2]++;
             acumulado++;
-        }while (acumulado<total);
+        }while (acumulado<100);
         this.dataPoints = temp;
         this.total = total;
         invalidate();

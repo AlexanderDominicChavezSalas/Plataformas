@@ -26,7 +26,6 @@ import com.unsapp.medicord.data.sqlite.controllers.UnidadMedicinaController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class MedicinaEditFragment extends Fragment {
     private Button btnAgregar, btnCancelar;
@@ -67,7 +66,7 @@ public class MedicinaEditFragment extends Fragment {
             etDescripcion = root.findViewById(R.id.etDescripcion);
             etDescripcion.setText(MedDes);
 
-            etDosis = root.findViewById(R.id.etDosis);
+            etDosis = root.findViewById(R.id.etFrec);
             etDosis.setText(String.valueOf((int) MedDos));
 
             spinNivel = root.findViewById(R.id.spinNivel);

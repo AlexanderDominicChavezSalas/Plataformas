@@ -51,7 +51,7 @@ public class MedicinaAddFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_medicina_add, container, false);
         etNombre = root.findViewById(R.id.etNombre);
         etDescripcion = root.findViewById(R.id.etDescripcion);
-        etDosis = root.findViewById(R.id.etDosis);
+        etDosis = root.findViewById(R.id.etFrec);
 
         spinNivel = root.findViewById(R.id.spinNivel);
         spinUnidadMedida = root.findViewById(R.id.spinUnidadMedida);

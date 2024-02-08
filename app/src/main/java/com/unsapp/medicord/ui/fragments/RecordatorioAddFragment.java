@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.provider.Settings;
@@ -21,9 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.unsapp.medicord.R;
 import com.unsapp.medicord.data.models.Medicina;
+import com.unsapp.medicord.data.models.Recordatorio;
+import com.unsapp.medicord.data.models.UnidadMedicina;
 import com.unsapp.medicord.data.sqlite.controllers.MedicinaController;
 import com.unsapp.medicord.data.sqlite.controllers.RecordatorioController;
 import com.unsapp.medicord.services.AlarmNotificationService;
@@ -34,6 +39,8 @@ import com.unsapp.medicord.ui.helpers.TimePickerFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 public class RecordatorioAddFragment extends Fragment {
     private Calendar calendar;
@@ -45,6 +52,8 @@ public class RecordatorioAddFragment extends Fragment {
     private ArrayList<Medicina> listaUnidadMedicina;
     private EditText etDate;
     private EditText etTime;
+    private EditText etNombre;
+    private EditText etFrec;
 
     public RecordatorioAddFragment() {
     }
@@ -53,44 +62,90 @@ public class RecordatorioAddFragment extends Fragment {
         super.onCreate(savedInstanceState);
         controller = new RecordatorioController(this.getContext());
         listaUnidadMedicina = new MedicinaController(this.getContext()).readAll();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_recordatorio_add, container, false);
-        etDate = root.findViewById(R.id.etDate);
-        etDate.setOnClickListener(v -> showDatePickerDialog());
-        etTime = root.findViewById(R.id.etTime);
-        etTime.setOnClickListener(v -> showTimePickerDialog());
 
-        Button btnAgregar = root.findViewById(R.id.btnAgregar);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            long MedCod = bundle.getLong("MedCod");
+            HashMap<Long, String> mapUnidadMedicina = generarHashMapMedicina(listaUnidadMedicina);
 
-        btnAgregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //metodo programar alarma
-                //programarAlarma(fecha,hora);
-                String horatemporal=etTime.getText().toString();
+            etDate = root.findViewById(R.id.etDate);
+            etDate.setOnClickListener(v -> showDatePickerDialog());
 
-                Log.d("ads",horatemporal);
-                int hora= Integer.parseInt(horatemporal.substring(0,2));
-                int minuto= Integer.parseInt(horatemporal.substring(5));
-                String fechatemporal=etDate.getText().toString();
-                Log.d("adas",fechatemporal);
+            etTime = root.findViewById(R.id.etTime);
+            etTime.setOnClickListener(v -> showTimePickerDialog());
 
-                int day= Integer.parseInt(fechatemporal.substring(0,2));
-                int month= Integer.parseInt(fechatemporal.substring(5,7));
-                int year= Integer.parseInt(fechatemporal.substring(10));
+            etNombre = root.findViewById(R.id.etNombre);
+            etNombre.setText(mapUnidadMedicina.get(MedCod));
+
+            etFrec = root.findViewById(R.id.etFrec);
+            
+            Button btnAgregar = root.findViewById(R.id.btnAgregar);
+
+            btnAgregar.setOnClickListener(v -> {
+                etDate.setError(null);
+                etTime.setError(null);
+                etNombre.setError(null);
+                etFrec.setError(null);
+
+                String fechaString=etDate.getText().toString();
+                if ("".equals(fechaString)) {
+                    etFrec.setError("Escribe el precio unitario");
+                    etFrec.requestFocus();
+                    return;
+                }
+                int day= Integer.parseInt(fechaString.substring(0,2));
+                int month= Integer.parseInt(fechaString.substring(3,5));
+                int year= Integer.parseInt(fechaString.substring(6,8));
+
+                String horaString=etTime.getText().toString();
+                if ("".equals(horaString)) {
+                    etFrec.setError("Escribe el precio unitario");
+                    etFrec.requestFocus();
+                    return;
+                }
+                int hora= Integer.parseInt(horaString.substring(0,2));
+                int minuto= Integer.parseInt(horaString.substring(3,5));
+
+                String frecuenciaString = etFrec.getText().toString();
+                int frecuencia;
+                if ("".equals(frecuenciaString)) {
+                    etFrec.setError("Escribe el precio unitario");
+                    etFrec.requestFocus();
+                    return;
+                }
+                try {
+                    frecuencia = Integer.parseInt(frecuenciaString);
+                } catch (NumberFormatException e) {
+                    etFrec.setError("Escribe un número");
+                    etFrec.requestFocus();
+                    return;
+                }
+
                 programarAlarmaRecurrente(year,month,day,hora,minuto,20000);
-            }
-        });
+                Recordatorio recordatorio = new Recordatorio(MedCod,frecuencia,etTime.getText()+" "+etDate.getText(),etTime.getText()+" "+etDate.getText(),"A");
+                long id = controller.create(recordatorio);
+                if (id == -1) {
+                    // De alguna manera ocurrió un error
+                    Toast.makeText(getActivity(), "Error al guardar el recordatorio. Intenta de nuevo", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Se guardo el recordatorio correctamente", Toast.LENGTH_SHORT).show();
+                    volverCasa();
+                }
+            });
+        }
         return root;
     }
     private void showTimePickerDialog() {
         TimePickerFragment newFragment = TimePickerFragment.newInstance((datePicker, hour, minute) -> {
             // +1 because January is zero
-            final String selectedHour = twoDigits(hour) + " : " + twoDigits(minute);
+            final String selectedHour = twoDigits(hour) + ":" + twoDigits(minute)+":00";
             etTime.setText(selectedHour);
         });
 
@@ -99,7 +154,7 @@ public class RecordatorioAddFragment extends Fragment {
     private void showDatePickerDialog() {
         DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
             // +1 because January is zero
-            final String selectedDate = twoDigits(day) + " / " + twoDigits(month+1) + " / " + year;
+            final String selectedDate = twoDigits(day) + "-" + twoDigits(month+1) + "-" + year;
             etDate.setText(selectedDate);
         });
 
@@ -201,5 +256,19 @@ public class RecordatorioAddFragment extends Fragment {
                 notificationManager.createNotificationChannel(channel);
             }
         }
+    }
+
+    private HashMap<Long, String> generarHashMapMedicina(List<Medicina> listaUnidades) {
+        HashMap<Long, String> hashMap = new HashMap<>();
+        for (Medicina unidad : listaUnidades) {
+            hashMap.put(unidad.getMedCod(), unidad.getMedNom()+" ("+unidad.getMedDos()+")");
+        }
+        return hashMap;
+    }
+    void volverCasa(){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, MedicinaFragment.class,null);
+        fragmentTransaction.commit();
     }
 }
