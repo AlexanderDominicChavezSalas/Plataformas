@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,66 +17,120 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.internal.location.zzbb;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import android.Manifest;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 public class LocationService extends Service {
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private final IBinder binder = new LocalBinder();
-    private double latitude;
-    private double longitude;
+    private static final String TAG = LocationService.class.getSimpleName();
+    public static final String ACTION_LOCATION_UPDATED = "com.example.ACTION_LOCATION_UPDATED";
+    static final String EXTRA_LATITUDE = "extra_latitude";
+    public static final String EXTRA_LONGITUDE = "extra_longitude";
+
+
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            Location location = locationResult.getLastLocation();
+            if (location != null) {
+                Log.d(TAG, "New location received: " + location.getLatitude() + ", " + location.getLongitude());
+                // Aquí puedes realizar acciones con la ubicación, como enviarla a un servidor, etc.
+                //enviarMsgApp(LocationService.this, "No tengo medicamento, ayuda", "986879006", location.getLatitude(), location.getLongitude());
+            } else {
+                Log.e(TAG, "Location is null");
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-            }
+        Log.d(TAG, "Service created");
 
-            @Override
-            public void onProviderEnabled(@NonNull String provider) {
-            }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-            @Override
-            public void onProviderDisabled(@NonNull String provider) {
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        // Guarda el contexto en una variable local para usarlo dentro del callback
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
-    }
-    public class LocalBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
-        }
-    }
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "Service started");
 
-    public double getLatitude() {
-        return latitude;
-    }
+        startLocationUpdates();
 
-    public double getLongitude() {
-        return longitude;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (locationManager != null) {
-            locationManager.removeUpdates(locationListener);
+        Log.d(TAG, "Service destroyed");
+
+        stopLocationUpdates();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void startLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setInterval(5000) // Intervalo de actualización de ubicación en milisegundos
+                .setFastestInterval(3000) // Intervalo de actualización más rápido en milisegundos
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
         }
     }
+
+
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+    public void enviarMsgApp(Context context, String message, String numeroTelefono, double latitude, double longitude) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        message += ". Esta es mi ubicación: http://maps.google.com/maps?saddr=" + latitude + "," + longitude;
+        String uri = "whatsapp://send?phone=" + "+51 " + numeroTelefono + "&text=" + message;
+        intent.setData(Uri.parse(uri));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 }
+

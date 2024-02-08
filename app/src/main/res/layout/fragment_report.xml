@@ -13,10 +13,7 @@
         android:layout_gravity="center"
         android:text="Reports Fragment"
         android:textSize="26sp" />
-<<<<<<< HEAD
 
-=======
->>>>>>> 984e14ddb82356e556cb5582d5fcf77d02b417c3
     <Button
         android:id="@+id/start_service_button"
         android:layout_width="wrap_content"

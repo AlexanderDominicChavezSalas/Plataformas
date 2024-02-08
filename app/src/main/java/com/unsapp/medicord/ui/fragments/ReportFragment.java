@@ -42,19 +42,7 @@ public class ReportFragment extends Fragment {
     public ReportFragment() {
         // Required empty public constructor
     }
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            LocationService.LocalBinder binder = (LocationService.LocalBinder) iBinder;
-            foregroundService = binder.getService();
-            serviceBound = true;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            serviceBound = false;
-        }
-    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,15 +73,9 @@ public class ReportFragment extends Fragment {
     private void programarAlarma(String fecha, String hora){
         Context context = getContext();
         calendar= Calendar.getInstance();
-<<<<<<< HEAD
         calendar.set(Calendar.HOUR_OF_DAY, 1);
         calendar.set(Calendar.MINUTE, 2);
         calendar.set(Calendar.SECOND, 00);
-=======
-        calendar.set(Calendar.HOUR_OF_DAY, 21);
-        calendar.set(Calendar.MINUTE, 11);
-        calendar.set(Calendar.SECOND, 30);
->>>>>>> 984e14ddb82356e556cb5582d5fcf77d02b417c3
         calendar.set(Calendar.MILLISECOND, 0);
         //long frecuenciaMilisegundos = frecuenciaHoras * 60 * 60 * 1000;
         long frecuenciaMilisegundos = 10000;
@@ -147,8 +129,8 @@ public class ReportFragment extends Fragment {
     private void programarAlarmaRecurrente(String fecha, String hora, long frecuenciaMilisegundos) {
         Context context = getContext();
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 4);
-        calendar.set(Calendar.MINUTE, 50);
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 15);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -215,9 +197,6 @@ public class ReportFragment extends Fragment {
         serviceIntent_1.putExtra("ID", 123);
         serviceIntent_1.putExtra("riesgo", "alto");
 
-        Intent serviceIntent = new Intent(context, LocationService.class);
-        context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        context.startService(serviceIntent);
 
         // Comprobar la versión de Android y empezar el servicio
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
