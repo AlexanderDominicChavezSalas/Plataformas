@@ -5,12 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
-import com.unsapp.medicord.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -25,8 +23,6 @@ public class MyGraphView extends View {
     private String[] daysOfWeek;
     private int[] dataPoints;
     private int maximum = 0;
-    private int minimum = 0;
-    private Paint axisPaint;
     private Paint legend;
 
     public MyGraphView(Context context) {
@@ -45,7 +41,6 @@ public class MyGraphView extends View {
         IntSummaryStatistics stats = Arrays.stream(dataPoints)
                 .summaryStatistics();
         this.maximum = stats.getMax();
-        this.minimum = stats.getMin();
         invalidate();
     }
 
@@ -63,13 +58,15 @@ public class MyGraphView extends View {
     }
 
     private String[] getLastDays(int length) {
+        Log.d("lengthLENGHT", String.valueOf(length));
         String[] days = new String[length];
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
 
-        for (int i = length; i > 0; i--) {
-            days[i-1] = sdf.format(calendar.getTime());
-            calendar.add(Calendar.DAY_OF_YEAR, -i);
+        for (int i = 0; i < length; i++) {
+            Calendar calDiaAnterior = (Calendar) calendar.clone();
+            calDiaAnterior.add(Calendar.DAY_OF_YEAR, -i - 1);
+            days[length-i-1] = sdf.format(calDiaAnterior.getTime());
         }
 
         return days;
@@ -115,7 +112,7 @@ public class MyGraphView extends View {
         legend.setTextSize(24);
         canvas.drawText("Nº de Medic.", legendX + 40, legendY + 20, legend);
 
-        axisPaint = new Paint();
+        Paint axisPaint = new Paint();
         axisPaint.setColor(Color.BLACK);
         axisPaint.setStrokeWidth(3);
 

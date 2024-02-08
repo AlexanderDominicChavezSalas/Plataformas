@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class PieChartView extends View {
@@ -15,7 +17,7 @@ public class PieChartView extends View {
     private Paint paint;
     private int[] dataPoints;
     private String[] categories;
-
+    private float total = 0;
     public PieChartView(Context context) {
         super(context);
         init();
@@ -29,7 +31,8 @@ public class PieChartView extends View {
     private void init() {
         paint = new Paint();
         paint.setAntiAlias(true);
-        dataPoints = new int[]{10, 40, 50}; // Valores de ejemplo para las categorías poco importante, medio importante y crítico
+        dataPoints = new int[]{10, 40, 50};
+        total = 100;
         categories = new String[]{"Poco Importante", "Medio Importante", "Crítico"};
     }
 
@@ -55,7 +58,7 @@ public class PieChartView extends View {
         int colorIndex = 0;
 
         for (int i = 0; i < dataPoints.length; i++) {
-            float sweepAngle = 360 * (dataPoints[i] / 100f);
+            float sweepAngle = 360 * (dataPoints[i]) / 100f;
 
             paint.setColor(getColorForIndex(colorIndex));
             // Dibuja una sección del pastel
@@ -90,8 +93,19 @@ public class PieChartView extends View {
         return colors[index];
     }
 
-    public void updateData(int[] newData) {
-        dataPoints = newData;
+    public void updateData(int[] newData, float total) {
+        int[] temp = new int[3];
+        int acumulado = 0;
+        for (int i=0;i<3;i++) {
+            temp[i] = (int) (newData[i]/total*100);
+            acumulado += temp[i];
+        }
+        do {
+            temp[2]++;
+            acumulado++;
+        }while (acumulado<total);
+        this.dataPoints = temp;
+        this.total = total;
         invalidate();
     }
 }
