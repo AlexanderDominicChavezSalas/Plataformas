@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +63,7 @@ public class RecordatorioAddFragment extends Fragment {
         etDate.setOnClickListener(v -> showDatePickerDialog());
         etTime = root.findViewById(R.id.etTime);
         etTime.setOnClickListener(v -> showTimePickerDialog());
-        String fecha="2024-02-07",hora="13:00",riesgo="alto",nombre="Paracetamol";
-        int id=123;
+
         Button btnAgregar = root.findViewById(R.id.btnAgregar);
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +71,18 @@ public class RecordatorioAddFragment extends Fragment {
             public void onClick(View v) {
                 //metodo programar alarma
                 //programarAlarma(fecha,hora);
-                programarAlarmaRecurrente(fecha,hora,20000);
+                String horatemporal=etTime.getText().toString();
+
+                Log.d("ads",horatemporal);
+                int hora= Integer.parseInt(horatemporal.substring(0,2));
+                int minuto= Integer.parseInt(horatemporal.substring(5));
+                String fechatemporal=etDate.getText().toString();
+                Log.d("adas",fechatemporal);
+
+                int day= Integer.parseInt(fechatemporal.substring(0,2));
+                int month= Integer.parseInt(fechatemporal.substring(5,7));
+                int year= Integer.parseInt(fechatemporal.substring(10));
+                programarAlarmaRecurrente(year,month,day,hora,minuto,20000);
             }
         });
         return root;
@@ -97,11 +108,11 @@ public class RecordatorioAddFragment extends Fragment {
     private String twoDigits(int n) {
         return (n<=9) ? ("0"+n) : String.valueOf(n);
     }
-    private void programarAlarmaRecurrente(String fecha, String hora, long frecuenciaMilisegundos) {
+    private void programarAlarmaRecurrente(int year,int month,int day, int hora,int minute, long frecuenciaMilisegundos) {
         Context context = getContext();
         calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 43);
+        calendar.set(Calendar.HOUR_OF_DAY, hora);
+        calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
