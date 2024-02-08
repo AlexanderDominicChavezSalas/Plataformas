@@ -73,13 +73,13 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
     public void enviarMsgApp(Context context, String message, String numeroTelefono, double latitude, double longitude) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        message += ". Esta es mi ubicación: http://maps.google.com/maps?saddr=" + latitude + "," + longitude;
+        message += ". Esta es mi ubicación: http://maps.google.com/maps/@" + latitude + "," + longitude+",6z";
         String uri = "whatsapp://send?phone=" + "+51 " + numeroTelefono + "&text=" + message;
         intent.setData(Uri.parse(uri));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
-
+    //https://www.google.com/maps/@42.585444,13.007813,6z
 
 
 }
