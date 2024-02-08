@@ -3,6 +3,7 @@ package com.unsapp.medicord.ui.fragments;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,23 +26,18 @@ import androidx.fragment.app.Fragment;
 
 import com.unsapp.medicord.R;
 import com.unsapp.medicord.services.AlarmNotificationService;
+import com.unsapp.medicord.services.AlarmReceiver;
 import com.unsapp.medicord.services.LocationService;
+import com.unsapp.medicord.services.NotificationReceiver;
 
 import java.util.Calendar;
 
 public class ReportFragment extends Fragment {
-/*
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;*/
     private Calendar calendar;
     private LocationService foregroundService;
     private boolean serviceBound = false;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -59,16 +55,6 @@ public class ReportFragment extends Fragment {
             serviceBound = false;
         }
     };
-    /*
-    public static ReportFragment newInstance(String param1, String param2) {
-        ReportFragment fragment = new ReportFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,24 +76,28 @@ public class ReportFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //metodo programar alarma
-                programarAlarma();
+                //programarAlarma(fecha,hora);
+                programarAlarmaRecurrente(fecha,hora,20000);
             }
         });
         return view;
     }
-    private void programarAlarma(){
+    private void programarAlarma(String fecha, String hora){
         Context context = getContext();
         calendar= Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 53);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.MINUTE, 2);
+        calendar.set(Calendar.SECOND, 00);
         calendar.set(Calendar.MILLISECOND, 0);
-
+        //long frecuenciaMilisegundos = frecuenciaHoras * 60 * 60 * 1000;
+        long frecuenciaMilisegundos = 10000;
         // Obtener el servicio AlarmManager
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         // Configurar la alarma para que se active en el tiempo específico
+
         if (alarmManager != null) {
             String tag = "TAG";
+
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), tag, new AlarmManager.OnAlarmListener() {
                 @Override
                 public void onAlarm() {
@@ -123,6 +113,74 @@ public class ReportFragment extends Fragment {
         }
 
     }
+    private void programarAlarma2(String fecha, String hora) {
+        Context context = getContext();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.MINUTE, 33);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Crear un Intent para el BroadcastReceiver
+        Intent intent = new Intent(context, NotificationReceiver.class);
+
+        // Crear un PendingIntent para el BroadcastReceiver
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Guardar la hora de la alarma como extra en el Intent
+        intent.putExtra("horaAlarma", calendar.getTimeInMillis());
+
+        // Obtener el servicio AlarmManager
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // Configurar la alarma
+        if (alarmManager != null) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
+    private void programarAlarmaRecurrente(String fecha, String hora, long frecuenciaMilisegundos) {
+        Context context = getContext();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 4);
+        calendar.set(Calendar.MINUTE, 50);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Crear un Intent para el BroadcastReceiver
+        Intent intent = new Intent(context, AlarmReceiver.class);
+
+        // Crear un PendingIntent para el BroadcastReceiver
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Guardar la hora de la alarma como extra en el Intent
+        intent.putExtra("horaAlarma", calendar.getTimeInMillis());
+
+        // Obtener el servicio AlarmManager
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // Configurar la alarma recurrente
+        if (alarmManager != null) {
+            String tag = "TAG";
+            // Programar la alarma inicial
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            /*alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), tag, new AlarmManager.OnAlarmListener() {
+                @Override
+                public void onAlarm() {
+                    Toast.makeText(context, "AlarmManager.OnAlarmListener", Toast.LENGTH_SHORT).show();
+                    //
+
+                    startServices(context);
+                    reproducirTonoAlarma(context);
+                    //
+
+                }
+            },null);*/
+            // Programar alarmas recurrentes
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+frecuenciaMilisegundos,
+                    frecuenciaMilisegundos, pendingIntent);
+        }
+    }
+
     private void reproducirTonoAlarma(Context context) {
         try {
             // Crear un MediaPlayer con el tono de alarma
@@ -138,7 +196,7 @@ public class ReportFragment extends Fragment {
                     mediaPlayer.stop();
                     mediaPlayer.release();
                 }
-            }, 20000); // 20 segundos
+            }, 10000); // 20 segundos
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -19,7 +19,7 @@ import com.unsapp.medicord.data.viewmodels.UserViewModel;
 import com.unsapp.medicord.databinding.ActivityMainBinding;
 import com.unsapp.medicord.ui.fragments.HomeFragment;
 import com.unsapp.medicord.ui.fragments.LoginFragment;
-import com.unsapp.medicord.ui.fragments.MedicineFragment;
+import com.unsapp.medicord.ui.fragments.MedicinaFragment;
 import com.unsapp.medicord.ui.fragments.RegisterFragment;
 import com.unsapp.medicord.ui.fragments.ReportFragment;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
                 }
                 else if (menuItemId == R.id.action_add_medicine) {
-                    loadFragment(new MedicineFragment());
+                    loadFragment(new MedicinaFragment());
                     return true;
                 }
                 else if (menuItemId == R.id.action_report) {

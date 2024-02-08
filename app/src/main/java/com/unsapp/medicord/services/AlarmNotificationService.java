@@ -12,6 +12,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -44,6 +45,8 @@ public class AlarmNotificationService extends Service {
         if (intent != null) {
             String nombre = intent.getStringExtra("nombre");
             String riesgo = intent.getStringExtra("riesgo");
+
+
             NOTIFICATION_ID = intent.getIntExtra("ID", 0);
             //Logica para los botones de la notificacion
             Intent yesIntent = new Intent(this, NotificationReceiver.class);
@@ -68,9 +71,6 @@ public class AlarmNotificationService extends Service {
                     .addAction(R.drawable.ic_help, "Ayuda", helpPendingIntent)
                     .build();
             startForeground(NOTIFICATION_ID, notification);
-            /*if (nombre != null && hora != null && riesgo != null) {
-
-            }*/
         }
 
         return START_STICKY;
