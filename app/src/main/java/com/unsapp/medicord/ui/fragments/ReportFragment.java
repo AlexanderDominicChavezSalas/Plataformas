@@ -85,9 +85,15 @@ public class ReportFragment extends Fragment {
     private void programarAlarma(String fecha, String hora){
         Context context = getContext();
         calendar= Calendar.getInstance();
+<<<<<<< HEAD
         calendar.set(Calendar.HOUR_OF_DAY, 1);
         calendar.set(Calendar.MINUTE, 2);
         calendar.set(Calendar.SECOND, 00);
+=======
+        calendar.set(Calendar.HOUR_OF_DAY, 21);
+        calendar.set(Calendar.MINUTE, 11);
+        calendar.set(Calendar.SECOND, 30);
+>>>>>>> 984e14ddb82356e556cb5582d5fcf77d02b417c3
         calendar.set(Calendar.MILLISECOND, 0);
         //long frecuenciaMilisegundos = frecuenciaHoras * 60 * 60 * 1000;
         long frecuenciaMilisegundos = 10000;
