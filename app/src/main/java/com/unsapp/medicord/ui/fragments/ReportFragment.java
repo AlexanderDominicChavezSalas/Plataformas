@@ -3,12 +3,16 @@ package com.unsapp.medicord.ui.fragments;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +25,12 @@ import androidx.fragment.app.Fragment;
 
 import com.unsapp.medicord.R;
 import com.unsapp.medicord.services.AlarmNotificationService;
+import com.unsapp.medicord.services.LocationService;
 
 import java.util.Calendar;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ReportFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ReportFragment extends Fragment {
-
+/*
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,22 +38,28 @@ public class ReportFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+    private String mParam2;*/
     private Calendar calendar;
+    private LocationService foregroundService;
+    private boolean serviceBound = false;
 
     public ReportFragment() {
         // Required empty public constructor
     }
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocationService.LocalBinder binder = (LocationService.LocalBinder) iBinder;
+            foregroundService = binder.getService();
+            serviceBound = true;
+        }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ReportFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            serviceBound = false;
+        }
+    };
+    /*
     public static ReportFragment newInstance(String param1, String param2) {
         ReportFragment fragment = new ReportFragment();
         Bundle args = new Bundle();
@@ -62,14 +68,11 @@ public class ReportFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
 
     }
 
@@ -95,8 +98,8 @@ public class ReportFragment extends Fragment {
     private void programarAlarma(){
         Context context = getContext();
         calendar= Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
-        calendar.set(Calendar.MINUTE, 3);
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 53);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
@@ -111,7 +114,7 @@ public class ReportFragment extends Fragment {
                     Toast.makeText(context, "AlarmManager.OnAlarmListener", Toast.LENGTH_SHORT).show();
                     //
 
-                    startAlarmNotificationService(context);
+                    startServices(context);
                     reproducirTonoAlarma(context);
                     //
 
@@ -140,13 +143,17 @@ public class ReportFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    private void startAlarmNotificationService(Context context) {
+    private void startServices(Context context) {
 
         // Crear un intent para iniciar el servicio
-        Intent serviceIntent = new Intent(context, AlarmNotificationService.class);
-        serviceIntent.putExtra("nombre", "Paracetamol");
-        serviceIntent.putExtra("ID", 123);
-        serviceIntent.putExtra("riesgo", "alto");
+        Intent serviceIntent_1 = new Intent(context, AlarmNotificationService.class);
+        serviceIntent_1.putExtra("nombre", "Paracetamol");
+        serviceIntent_1.putExtra("ID", 123);
+        serviceIntent_1.putExtra("riesgo", "alto");
+
+        Intent serviceIntent = new Intent(context, LocationService.class);
+        context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+        context.startService(serviceIntent);
 
         // Comprobar la versión de Android y empezar el servicio
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -154,10 +161,10 @@ public class ReportFragment extends Fragment {
             createNotificationChannel(context);
 
             // Iniciar el servicio en primer plano utilizando startForegroundService
-            ContextCompat.startForegroundService(context, serviceIntent);
+            ContextCompat.startForegroundService(context, serviceIntent_1);
         } else {
             // Iniciar el servicio utilizando startService
-            context.startService(serviceIntent);
+            context.startService(serviceIntent_1);
         }
     }
 
@@ -171,4 +178,5 @@ public class ReportFragment extends Fragment {
             }
         }
     }
+
 }

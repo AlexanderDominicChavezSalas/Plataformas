@@ -71,8 +71,6 @@ public class AlarmNotificationService extends Service {
             /*if (nombre != null && hora != null && riesgo != null) {
 
             }*/
-        }else{
-            System.out.println("Algo salio mal intento nulo");
         }
 
         return START_STICKY;

@@ -6,14 +6,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.unsapp.medicord.R;
+import com.unsapp.medicord.data.models.Medicina;
 import com.unsapp.medicord.data.models.User;
+import com.unsapp.medicord.data.sqlite.adapters.MedicinaAdapter;
+import com.unsapp.medicord.data.sqlite.controllers.MedicinaController;
 import com.unsapp.medicord.data.viewmodels.UserViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,13 +39,25 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private MedicinaController controller;
+    private MedicinaAdapter adapter;
+    private List<Medicina> listaModels;
     private UserViewModel userViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        refrescarLista();
+    }
+    public void refrescarLista() {
+        if (adapter == null) return;
+        listaModels = controller.readAll();
+        adapter.setList(listaModels);
+        adapter.notifyDataSetChanged();
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -77,13 +98,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(User user) {
                 long userId = user.getId();
-
-                System.out.println(userId);
             }
-            // todx  el codigo aqui
-            //dasdasd
-        });
 
+        });
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        controller = new MedicinaController(this.getContext());
+        listaModels = new ArrayList<>();
+        adapter = new MedicinaAdapter(listaModels);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
