@@ -1,7 +1,6 @@
 package com.unsapp.medicord.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,9 +16,9 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.unsapp.medicord.R;
 import com.unsapp.medicord.data.viewmodels.UserViewModel;
 import com.unsapp.medicord.databinding.ActivityMainBinding;
-import com.unsapp.medicord.ui.fragments.HomeFragment;
-import com.unsapp.medicord.ui.fragments.LoginFragment;
 import com.unsapp.medicord.ui.fragments.MedicinaFragment;
+import com.unsapp.medicord.ui.fragments.LoginFragment;
+import com.unsapp.medicord.ui.fragments.MedicinaAddFragment;
 import com.unsapp.medicord.ui.fragments.RegisterFragment;
 import com.unsapp.medicord.ui.fragments.ReportFragment;
 
@@ -63,11 +62,11 @@ public class MainActivity extends AppCompatActivity implements
                 int menuItemId = item.getItemId();
 
                 if (menuItemId == R.id.action_home){
-                    loadFragment(new HomeFragment());
+                    loadFragment(new MedicinaFragment());
                     return true;
                 }
                 else if (menuItemId == R.id.action_add_medicine) {
-                    loadFragment(new MedicinaFragment());
+                    loadFragment(new MedicinaAddFragment());
                     return true;
                 }
                 else if (menuItemId == R.id.action_report) {
@@ -104,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoginSuccess() {
         // when login is successful
-        loadFragment(new HomeFragment());
+        loadFragment(new MedicinaFragment());
         showBottomNavigationView();
     }
 
     @Override
     public void onRegisterSuccess() {
         // when user registration is successful
-        loadFragment(new HomeFragment());
+        loadFragment(new MedicinaFragment());
         showBottomNavigationView();
     }
 

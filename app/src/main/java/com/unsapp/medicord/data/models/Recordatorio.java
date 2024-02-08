@@ -8,12 +8,12 @@ public class Recordatorio {
     private long RecCod;
     private long MedCod;
     private int RecFre;
-    private int RecFecIni;
-    private int RecFecFin;
+    private String RecFecIni;
+    private String RecFecFin;
     @Estado
     private String RecEstReg;
 
-    public Recordatorio(long medCod, int recFre, int recFecIni, int recFecFin, String recEstReg) {
+    public Recordatorio(long medCod, int recFre, String recFecIni, String recFecFin, String recEstReg) {
         MedCod = medCod;
         RecFre = recFre;
         RecFecIni = recFecIni;
@@ -21,7 +21,7 @@ public class Recordatorio {
         RecEstReg = recEstReg;
     }
 
-    public Recordatorio(long recCod, long medCod, int recFre, int recFecIni, int recFecFin, String recEstReg) {
+    public Recordatorio(long recCod, long medCod, int recFre, String recFecIni, String recFecFin, String recEstReg) {
         RecCod = recCod;
         MedCod = medCod;
         RecFre = recFre;
@@ -54,19 +54,19 @@ public class Recordatorio {
         RecFre = recFre;
     }
 
-    public int getRecFecIni() {
+    public String getRecFecIni() {
         return RecFecIni;
     }
 
-    public void setRecFecIni(int recFecIni) {
+    public void setRecFecIni(String recFecIni) {
         RecFecIni = recFecIni;
     }
 
-    public int getRecFecFin() {
+    public String getRecFecFin() {
         return RecFecFin;
     }
 
-    public void setRecFecFin(int recFecFin) {
+    public void setRecFecFin(String recFecFin) {
         RecFecFin = recFecFin;
     }
 

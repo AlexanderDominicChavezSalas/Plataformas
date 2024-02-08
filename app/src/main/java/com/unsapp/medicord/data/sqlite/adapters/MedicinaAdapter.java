@@ -26,7 +26,7 @@ public class MedicinaAdapter extends RecyclerView.Adapter<MedicinaAdapter.MyView
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_medicine, parent, false);
+        View rootHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_medicina, parent, false);
         return new MyViewHolder(rootHolder);
     }
 
@@ -34,12 +34,22 @@ public class MedicinaAdapter extends RecyclerView.Adapter<MedicinaAdapter.MyView
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Medicina model = listModels.get(position);
         // Obtener los datos de la lista
-        long cod = model.getMedCod();
+        long cod = model.getMedNiv();
         String nombre = model.getMedNom();
-
+        int contador = model.getMedCon();
+        String nivel;
+        switch ((int) cod){
+            case 3:
+                nivel = "Crítico"; break;
+            case 2:
+                nivel = "Medio Importante"; break;
+            default:
+                nivel = "Poco Importante"; break;
+        }
         // Y poner a los TextView los datos con setText
         holder.tvNom.setText(nombre);
-        holder.tvCod.setText(String.valueOf(cod));
+        holder.tvCon.setText(String.valueOf(contador));
+        holder.tvNiv.setText(nivel);
     }
 
     @Override
@@ -48,12 +58,13 @@ public class MedicinaAdapter extends RecyclerView.Adapter<MedicinaAdapter.MyView
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        final TextView tvNom, tvCod;
+        final TextView tvNom, tvCon, tvNiv;
 
         MyViewHolder(View itemView) {
             super(itemView);
+            this.tvNiv = itemView.findViewById(R.id.tvNiv);
             this.tvNom = itemView.findViewById(R.id.tvNom);
-            this.tvCod = itemView.findViewById(R.id.tvCod);
+            this.tvCon = itemView.findViewById(R.id.tvCon);
         }
     }
 }

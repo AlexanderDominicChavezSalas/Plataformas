@@ -9,33 +9,33 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unsapp.medicord.R;
-import com.unsapp.medicord.data.models.UnidadMedicina;
+import com.unsapp.medicord.data.models.Recordatorio;
 
 import java.util.List;
 
-public class UnidadMedicinaAdapter extends RecyclerView.Adapter<UnidadMedicinaAdapter.MyViewHolder>{
-    private List<UnidadMedicina> listModels;
+public class RecordatorioAdapter extends RecyclerView.Adapter<RecordatorioAdapter.MyViewHolder>{
+    private List<Recordatorio> listModels;
 
-    public UnidadMedicinaAdapter(List<UnidadMedicina> listModels) {
+    public RecordatorioAdapter(List<Recordatorio> listModels) {
         this.listModels = listModels;
     }
-    public void setList(List<UnidadMedicina> listModels) {
+    public void setList(List<Recordatorio> listModels) {
         this.listModels = listModels;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootHolder = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_unidad_medicine, parent, false);
-        return new MyViewHolder(rootHolder);
+        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_unidad_medicine, parent, false);
+        return new MyViewHolder(root);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        UnidadMedicina model = listModels.get(position);
+        Recordatorio model = listModels.get(position);
         // Obtener los datos de la lista
-        long cod = model.getUniMedCod();
-        String nombre = model.getUniMedNom();
+        long cod = model.getRecCod();
+        String nombre = model.getRecFecIni();
 
         // Y poner a los TextView los datos con setText
         holder.tvNom.setText(nombre);

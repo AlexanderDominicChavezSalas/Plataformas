@@ -14,6 +14,7 @@ public abstract class Controller<E> {
     protected final String CODIGO_TABLA;
     protected final String ESTADO_TABLA;
     protected final List<String> params= new ArrayList<>();
+    protected boolean isActive = true;
     protected Controller(BDHelper ayudanteBaseDeDatos, Class<?> clase){
         this.ayudanteBaseDeDatos = ayudanteBaseDeDatos;
         NOMBRE_TABLA = clase.getSimpleName();
@@ -50,8 +51,15 @@ public abstract class Controller<E> {
     public int deleteLogic(E model){
         return changeStatus(getCodigo(model),"*");
     }
-    public int deactivate(E model, String status){
-        return changeStatus(getCodigo(model),"I");
+    public int deactivate(E model){
+        if (isActive){
+            isActive = false;
+            return changeStatus(getCodigo(model),"I");
+        }
+        else{
+            isActive = true;
+            return changeStatus(getCodigo(model),"A");
+        }
     }
     public int reactivate(E model){
         return changeStatus(getCodigo(model),"A");

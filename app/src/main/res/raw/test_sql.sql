@@ -1,5 +1,5 @@
 --
--- Archivo generado con SQLiteStudio v3.4.4 el mié. Feb. 7 14:42:12 2024
+-- Archivo generado con SQLiteStudio v3.4.4 el jue. Feb. 8 02:26:45 2024
 --
 -- Codificación de texto usada: UTF-8
 --
@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Tabla: Medicina
-CREATE TABLE IF NOT EXISTS Medicina (MedCod INTEGER PRIMARY KEY AUTOINCREMENT, MedNom TEXT NOT NULL, MedDes TEXT, UniMedCod TEXT CONSTRAINT UniMedCod REFERENCES UnidadMedicina (UniMedCod) NOT NULL, MedDos NUMERIC NOT NULL, MedNiv INTEGER NOT NULL, MedEstReg TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS Medicina (MedCod INTEGER PRIMARY KEY AUTOINCREMENT, MedNom TEXT NOT NULL, MedDes TEXT, UniMedCod TEXT CONSTRAINT UniMedCod REFERENCES UnidadMedicina (UniMedCod) NOT NULL, MedDos NUMERIC NOT NULL, MedNiv INTEGER NOT NULL, MedCon INTEGER NOT NULL DEFAULT (1), MedEstReg TEXT NOT NULL);
 
 -- Tabla: Recordatorio
 CREATE TABLE IF NOT EXISTS Recordatorio (RecCod INTEGER PRIMARY KEY AUTOINCREMENT, MedCod INTEGER CONSTRAINT MedCod REFERENCES Medicina (MedCod) NOT NULL, RecFre INTEGER NOT NULL, RecFecIni INTEGER NOT NULL, RecFecFin INTEGER NOT NULL, RecEstReg TEXT NOT NULL);

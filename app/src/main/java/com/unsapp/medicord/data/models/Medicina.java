@@ -11,26 +11,37 @@ public class Medicina {
     private long UniMedCod;
     private double MedDos;
     private int MedNiv;
+    private int MedCon;
     @Estado
     private String MedEstReg;
 
-    public Medicina(String medNom, String medDes, long uniMedCod, double medDos, int medNiv, String medEstReg) {
+    public Medicina(String medNom, String medDes, long uniMedCod, double medDos, int medNiv, int medCon, String medEstReg) {
         MedNom = medNom;
         MedDes = medDes;
         UniMedCod = uniMedCod;
         MedDos = medDos;
         MedNiv = medNiv;
+        MedCon = medCon;
         MedEstReg = medEstReg;
     }
 
-    public Medicina(long medCod , String medNom, String medDes, long uniMedCod, double medDos, int medNiv, String medEstReg) {
+    public Medicina(long medCod, String medNom, String medDes, long uniMedCod, double medDos, int medNiv, int medCon, String medEstReg) {
         MedCod = medCod;
         MedNom = medNom;
         MedDes = medDes;
         UniMedCod = uniMedCod;
         MedDos = medDos;
         MedNiv = medNiv;
+        MedCon = medCon;
         MedEstReg = medEstReg;
+    }
+
+    public int getMedCon() {
+        return MedCon;
+    }
+
+    public void setMedCon(int medCon) {
+        MedCon = medCon;
     }
 
     public long getMedCod() {

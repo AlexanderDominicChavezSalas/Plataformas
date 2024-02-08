@@ -26,6 +26,7 @@ public class MedicinaController extends Controller<Medicina> {
         valoresModificar.put("UniMedCod",model.getUniMedCod());
         valoresModificar.put("MedDos",model.getMedDos());
         valoresModificar.put("MedNiv",model.getMedNiv());
+        valoresModificar.put("MedCon",model.getMedCon());
         valoresModificar.put("MedEstReg",model.getMedEstReg());
         return valoresModificar;
     }
@@ -38,7 +39,8 @@ public class MedicinaController extends Controller<Medicina> {
         long UniMedCod = cursor.getLong(3);
         double MedDos = cursor.getInt(4);
         int MedNiv = cursor.getInt(5);
-        String MedEstReg = cursor.getString(6);
-        return new Medicina(MedCod,MedNom,MedDes,UniMedCod,MedDos,MedNiv,MedEstReg);
+        int MedCon = cursor.getInt(6);
+        String MedEstReg = cursor.getString(7);
+        return new Medicina(MedCod,MedNom,MedDes,UniMedCod,MedDos,MedNiv,MedCon,MedEstReg);
     }
 }

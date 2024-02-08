@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.MedicinaEditFragment">
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ui.fragments.RecordatorioAddFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/form_both"
         android:layout_marginEnd="@dimen/form_both"
-        android:text="Editar Medicina"
+        android:text="Añadir Recordatorio"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,13 +21,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.05" />
 
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/horizontal_line"
+        app:layout_constraintBottom_toTopOf="@+id/etNombre"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="7dp" />
+
     <EditText
         android:id="@+id/etNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/form_both"
         android:layout_marginEnd="@dimen/form_both"
-        android:hint="Nombre"
+        android:hint="Nombre Medicamento"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:nextFocusForward="@id/etDescripcion"
@@ -35,74 +44,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.15" />
-
-    <EditText
-        android:id="@+id/etDescripcion"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="@dimen/form_both"
-        android:layout_marginTop="@dimen/form_separator"
-        android:layout_marginEnd="@dimen/form_both"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Descripción del Medicamento"
-        android:inputType="textMultiLine"
-        android:nextFocusForward="@id/etDosis"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <EditText
         android:id="@+id/etDosis"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/form_both"
-        android:hint="Dosis (ej. 300)"
-        android:inputType="number"
-        android:minHeight="48dp"
-        android:nextFocusForward="@id/spinUnidadMedida"
-        app:layout_constraintBottom_toBottomOf="@+id/spinUnidadMedida"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spinUnidadMedida" />
-
-    <Spinner
-        android:id="@+id/spinUnidadMedida"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/form_separator"
-        android:layout_marginEnd="@dimen/form_both"
-        android:entries="@array/unidad_medicinas_array"
-        android:minHeight="48dp"
-        android:nextFocusForward="@id/spinNivel"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDescripcion" />
-
-    <Spinner
-        android:id="@+id/spinNivel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/form_both"
         android:layout_marginTop="@dimen/form_separator"
         android:layout_marginEnd="@dimen/form_both"
-        android:entries="@array/nivel_medicinas_array"
+        android:hint="Frecuencia en horas (Ej. 2)"
+        android:inputType="number"
         android:minHeight="48dp"
-        android:nextFocusForward="@id/btnAgregar"
-        android:spinnerMode="dropdown"
+        android:nextFocusForward="@id/spinUnidadMedida"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDosis" />
+        app:layout_constraintTop_toBottomOf="@+id/etTime" />
 
     <Button
         android:id="@+id/btnAgregar"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/form_separator"
         android:backgroundTint="#4FC13B"
         android:nextFocusForward="@id/btnCancelar"
         android:padding="20dp"
@@ -114,14 +77,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinNivel" />
+        app:layout_constraintTop_toBottomOf="@+id/etDosis" />
 
     <Button
         android:id="@+id/btnCancelar"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/form_separator"
         android:backgroundTint="#F44242"
         android:padding="20dp"
         android:paddingStart="30dp"
@@ -132,20 +94,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias=".2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinNivel" />
+        app:layout_constraintTop_toBottomOf="@+id/etDosis" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/etTime"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0.2"
+        android:layout_marginStart="@dimen/form_both"
+        android:layout_marginTop="@dimen/form_separator"
+        android:layout_marginEnd="@dimen/form_both"
+        android:ems="10"
+        android:hint="Seleccione hora"
+        android:inputType="time"
+        android:minHeight="48dp"
         android:focusable="false"
-        android:src="@drawable/fondo_medicina_add"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497" />
+        app:layout_constraintTop_toBottomOf="@+id/etDate" />
+
+    <EditText
+        android:id="@+id/etDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/form_both"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="@dimen/form_both"
+        android:ems="10"
+        android:hint="Seleccione fecha"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:focusable="false"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

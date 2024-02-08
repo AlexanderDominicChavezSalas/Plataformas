@@ -9,7 +9,7 @@ import com.unsapp.medicord.data.sqlite.BDHelper;
 import com.unsapp.medicord.data.sqlite.Controller;
 
 public class RecordatorioController extends Controller<Recordatorio> {
-    protected RecordatorioController(Context context) {
+    public RecordatorioController(Context context) {
         super(new BDHelper(context,null,1), Recordatorio.class);
     }
 
@@ -21,7 +21,6 @@ public class RecordatorioController extends Controller<Recordatorio> {
     @Override
     protected ContentValues setFields(Recordatorio model) {
         ContentValues valoresModificar = new ContentValues();
-        valoresModificar.put("MedCod",model.getMedCod());
         valoresModificar.put("RecFre",model.getRecFre());
         valoresModificar.put("RecFecIni",model.getRecFecIni());
         valoresModificar.put("RecFecFin",model.getRecFecFin());
@@ -34,8 +33,8 @@ public class RecordatorioController extends Controller<Recordatorio> {
         long UniMedCod = cursor.getLong(0);
         long MedCod = cursor.getLong(1);
         int RecFre = cursor.getInt(2);
-        int RecFecIni = cursor.getInt(3);
-        int RecFecFin = cursor.getInt(4);
+        String RecFecIni = cursor.getString(3);
+        String RecFecFin = cursor.getString(4);
         String RecEstReg = cursor.getString(5);
         return new Recordatorio(UniMedCod, MedCod, RecFre, RecFecIni, RecFecFin, RecEstReg);
     }
