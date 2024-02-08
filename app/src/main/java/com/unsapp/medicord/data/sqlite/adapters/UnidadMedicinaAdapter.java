@@ -48,7 +48,7 @@ public class UnidadMedicinaAdapter extends RecyclerView.Adapter<UnidadMedicinaAd
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNom, tvCod;
+        final TextView tvNom, tvCod;
 
         MyViewHolder(View itemView) {
             super(itemView);

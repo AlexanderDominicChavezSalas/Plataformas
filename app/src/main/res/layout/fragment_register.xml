@@ -114,7 +114,7 @@
             android:background="@drawable/bord"
             android:text="Registrar"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
 
 
     </LinearLayout>

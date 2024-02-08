@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="unidad_medicinas_array">
+        <item>ml</item>
+        <item>mg/ml</item>
+        <item>mg</item>
+        <item>mmHg</item>
+    </string-array>
+    <string-array name="nivel_medicinas_array">
+        <item>Poco Importante</item>
+        <item>Medio Importante</item>
+        <item>Crítico</item>
+    </string-array>
+</resources>

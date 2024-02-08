@@ -30,15 +30,6 @@ import com.unsapp.medicord.services.LocationService;
 import java.util.Calendar;
 
 public class ReportFragment extends Fragment {
-/*
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;*/
     private Calendar calendar;
     private LocationService foregroundService;
     private boolean serviceBound = false;
@@ -59,16 +50,6 @@ public class ReportFragment extends Fragment {
             serviceBound = false;
         }
     };
-    /*
-    public static ReportFragment newInstance(String param1, String param2) {
-        ReportFragment fragment = new ReportFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-*/
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,9 +79,9 @@ public class ReportFragment extends Fragment {
     private void programarAlarma(){
         Context context = getContext();
         calendar= Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 53);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 21);
+        calendar.set(Calendar.MINUTE, 11);
+        calendar.set(Calendar.SECOND, 30);
         calendar.set(Calendar.MILLISECOND, 0);
 
         // Obtener el servicio AlarmManager

@@ -27,7 +27,7 @@
             android:layout_marginBottom="320dp"
             android:text="MediCord"
             android:textColor="#1E7263"
-            android:textSize="28dp" />
+            android:textSize="28sp" />
 
         <ImageView
             android:layout_width="140dp"
