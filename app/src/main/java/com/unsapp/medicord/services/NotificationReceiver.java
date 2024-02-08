@@ -33,17 +33,17 @@ public class NotificationReceiver extends BroadcastReceiver {
             switch (action) {
                 case "YES_ACTION":
                     // Acción cuando se presiona "Sí"
-                    Toast.makeText(context, "Alarma apagada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Opción Si", Toast.LENGTH_SHORT).show();
                     siAlarma(context);
                     break;
                 case "NO_ACTION":
                     // Acción cuando se presiona "No"
-                    Toast.makeText(context, "Alarma pospuesta", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Opción No", Toast.LENGTH_SHORT).show();
                     noAlarma(context);
                     break;
                 case "HELP_ACTION":
                     // Acción cuando se presiona "Help"
-                    Toast.makeText(context, "Alarma ayuda", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Opción ayuda", Toast.LENGTH_SHORT).show();
                     llamadaAlarma(context,intent);
                     break;
 
